@@ -5,6 +5,8 @@ import { watch} from "vue";
 
 const duration = ref(30)
 const items = ref<any[]>([])
+const isModalOpen = ref(false)
+
 const column = [
   {key: 'stationName', label: 'Tên trạm'},
   {key: 'reason', label: 'Lý do'},
@@ -13,7 +15,9 @@ const column = [
 const ui = {
   td: {
     base: ''
-  }
+  },
+  background: '',
+  shadow: ''
 }
 
 onMounted(() => {
@@ -32,12 +36,15 @@ watch(duration, () => {
 })
 
 const getData = async () => {
+  isModalOpen.value = true
   const {data} = await useFetch<{ items: Result[] }>('/api/power', {
     method: 'POST',
     body: JSON.stringify({
       ...getDate()
     }),
   })
+
+  isModalOpen.value = false
 
   if (data.value?.items) {
     items.value = data.value?.items.map(i => ({
@@ -57,7 +64,12 @@ const durationStr = () => {
 </script>
 
 <template>
-  <UContainer class="py-5">
+  <UModal v-model="isModalOpen" v-if="isModalOpen" prevent-close :ui="ui">
+    <div class="flex items-center justify-center animate-spin ">
+      <UIcon class="text-3xl" name="i-heroicons-arrow-path" />
+    </div>
+  </UModal>
+  <UContainer class="py-5" v-else>
     <h1 class="text-2xl border-b border-b-gray-500 pb-1">Tra cứu lịch cắt điện</h1>
     <div class="flex gap-2 pt-5">
       <UButton @click="duration = 30" color="indigo">1 tháng</UButton>
