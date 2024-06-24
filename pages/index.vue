@@ -65,7 +65,7 @@ const durationStr = () => {
 
 <template>
   <UModal v-model="isModalOpen" v-if="isModalOpen" prevent-close :ui="ui">
-    <div class="flex items-center justify-center animate-spin ">
+    <div class="flex justify-center animate-spin ">
       <UIcon class="text-3xl" name="i-heroicons-arrow-path" />
     </div>
   </UModal>
